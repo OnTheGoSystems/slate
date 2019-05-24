@@ -19,11 +19,20 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Translation Proxy API consumer specification! You can use the information presented here to build an API compatible to the Translation Proxy consumer needs.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+The Translation Proxy system allows WPML and Translation Service to communicate efficiently. Send jobs for translation and receive them. There is no direct communication between WPML and Translation Services.
 
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+WPML has a common interface, that allows website admins to activate and authenticate with the Translation Service, select translatable content and send it to Translation Proxy. As soon as Translation Proxy delivers the data to Translation Service, website admins are expected to login to the Translation Service admin panel and complete the configuration (select translators, accept bids, etc.). When a translation is ready, Translation Service will send a notification to Translation Proxy to download the completed translation and deliver it to WPML.
+
+# Communication workflow
+
+Here is an example of standard communication workflow between Translation Proxy and Translation Service.
+ 
+To be able to send any data to Translation Service user is required to have an account in the Translation Service (WPML does not allow to create an account in Translation Services).
+We are also assuming that user, as soon as Translation Proxy delivers all files for translation, from WPML to the Translation Service, must complete the configuration in the Translation Service admin panel. WPML does not provide any option to choose (e.g. translators or any special translation options). All those options has to be set from the Translation Service admin panel.
+
+
 
 # Authentication
 

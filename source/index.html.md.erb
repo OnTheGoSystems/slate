@@ -1,0 +1,273 @@
+---
+title: API Reference
+
+language_tabs: # must be one of https://git.io/vQNgJ
+  - shell
+  - ruby
+
+toc_footers:
+  - <a href='#'>Sign Up for a Developer Key</a>
+  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
+
+includes:
+  - errors
+
+search: true
+---
+
+# Introduction
+
+Welcome to the Translation Proxy API consumer specification! You can use the information presented here to build an API compatible to the Translation Proxy consumer needs.
+
+The Translation Proxy system allows WPML and Translation Service to communicate efficiently. Send jobs for translation and receive them. There is no direct communication between WPML and Translation Services.
+
+WPML has a common interface, that allows website admins to activate and authenticate with the Translation Service, select translatable content and send it to Translation Proxy. As soon as Translation Proxy delivers the data to Translation Service, website admins are expected to login to the Translation Service client panel and complete the configuration (select translators, accept bids, etc.). When a translation is ready, Translation Service will send a notification to Translation Proxy to download the completed translation and deliver it to WPML.
+
+# Communication workflow
+
+Here is an example of standard communication workflow between Translation Proxy and Translation Service.
+ 
+<%= image_tag "images/communication_workflow.png" %>
+
+To be able to send any data to Translation Service website admins are required to have an account with the Translation Service. WPML does not allow to create an account in Translation Services.
+
+And of course, as already hinted, we also assume that as soon as Translation Proxy delivers all files for translation (from WPML to the Translation Service); website admins will complete any further configuration needed for translators to start their work in the Translation Service client panel.
+
+# General API Specifications
+
+Translation Proxy communicates with APIs build based on the [{JSON:API}](https://jsonapi.org/) specification.
+Use the documentation we provide here and the [examples](https://jsonapi.org/examples/) over at {JSON:API} to structure your API.
+
+# Authentication
+
+> To authorize, Translation Proxy makes a `GET` request to a `clients` API endpoint:
+
+```ruby
+
+RestClient.get(
+  "https://api-base-url/api_version/clients", 
+  {
+    accept:"application/vnd.api+json", 
+    authorization: "Token token=TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt"
+  }
+)
+
+```
+
+```shell
+# With shell, you can just pass the correct header with each request
+curl "api_url/clients"
+  -H "Authorization: Token token='TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt'"
+  -H "Accept: application/vnd.api+json"
+```
+
+> Make sure to replace `TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt` with your API key.
+
+> The above request must return a [JSON structured response](https://jsonapi.org/) like this:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "type": "users",
+    "attributes": {
+      "name": "John Doe"
+    }
+  }
+}
+```
+
+When a website admin activates the Translation Service in WPML, he is asked to authorize the connection with a given API Token.
+Translation Proxy requests the client account with the provided API Token from the Translation Service. 
+
+If the request is successful then the Translation Service is connected to the WPML instance and the website admin is able to send content for translation. 
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
+
+### HTTP Request
+
+`GET https://example.com/api/clients`
+
+### Request Headers
+
+Key | Value | 
+--------- | ------- |
+Authorization | Token token="TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt" |
+Accept | application/vnd.api+json | 
+
+<aside class="notice">
+Translation Services must provide a <code>unique API Token</code> to each client.
+</aside>
+
+# Kittens
+
+## Get All Kittens
+
+```ruby
+require 'kittn'
+
+api = Kittn::APIClient.authorize!('meowmeowmeow')
+api.kittens.get
+```
+
+```python
+import kittn
+
+api = kittn.authorize('meowmeowmeow')
+api.kittens.get()
+```
+
+```shell
+curl "http://example.com/api/kittens"
+  -H "Authorization: meowmeowmeow"
+```
+
+```javascript
+const kittn = require('kittn');
+
+let api = kittn.authorize('meowmeowmeow');
+let kittens = api.kittens.get();
+```
+
+> The above command returns JSON structured like this:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Fluffums",
+    "breed": "calico",
+    "fluffiness": 6,
+    "cuteness": 7
+  },
+  {
+    "id": 2,
+    "name": "Max",
+    "breed": "unknown",
+    "fluffiness": 5,
+    "cuteness": 10
+  }
+]
+```
+
+This endpoint retrieves all kittens.
+
+### HTTP Request
+
+`GET http://example.com/api/kittens`
+
+### Query Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+include_cats | false | If set to true, the result will also include cats.
+available | true | If set to false, the result will include kittens that have already been adopted.
+
+<aside class="success">
+Remember — a happy kitten is an authenticated kitten!
+</aside>
+
+## Get a Specific Kitten
+
+```ruby
+require 'kittn'
+
+api = Kittn::APIClient.authorize!('meowmeowmeow')
+api.kittens.get(2)
+```
+
+```python
+import kittn
+
+api = kittn.authorize('meowmeowmeow')
+api.kittens.get(2)
+```
+
+```shell
+curl "http://example.com/api/kittens/2"
+  -H "Authorization: meowmeowmeow"
+```
+
+```javascript
+const kittn = require('kittn');
+
+let api = kittn.authorize('meowmeowmeow');
+let max = api.kittens.get(2);
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 2,
+  "name": "Max",
+  "breed": "unknown",
+  "fluffiness": 5,
+  "cuteness": 10
+}
+```
+
+This endpoint retrieves a specific kitten.
+
+<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+
+### HTTP Request
+
+`GET http://example.com/kittens/<ID>`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ID | The ID of the kitten to retrieve
+
+## Delete a Specific Kitten
+
+```ruby
+require 'kittn'
+
+api = Kittn::APIClient.authorize!('meowmeowmeow')
+api.kittens.delete(2)
+```
+
+```python
+import kittn
+
+api = kittn.authorize('meowmeowmeow')
+api.kittens.delete(2)
+```
+
+```shell
+curl "http://example.com/api/kittens/2"
+  -X DELETE
+  -H "Authorization: meowmeowmeow"
+```
+
+```javascript
+const kittn = require('kittn');
+
+let api = kittn.authorize('meowmeowmeow');
+let max = api.kittens.delete(2);
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "id": 2,
+  "deleted" : ":("
+}
+```
+
+This endpoint deletes a specific kitten.
+
+### HTTP Request
+
+`DELETE http://example.com/kittens/<ID>`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+ID | The ID of the kitten to delete
+
