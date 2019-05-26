@@ -5,33 +5,37 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - shell
   - ruby
 
-toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/lord/slate'>Documentation Powered by Slate</a>
-
-includes:
-  - errors
-
 search: true
 ---
 
 # Introduction
 
-Welcome to the Translation Proxy API consumer specification! You can use the information presented here to build an API compatible to the Translation Proxy consumer needs.
+Welcome to the Translation Proxy API consumer specification! You can use the information presented here to build an API that Translation Proxy is able to consume.
 
-The Translation Proxy system allows WPML and Translation Service to communicate efficiently. Send jobs for translation and receive them. There is no direct communication between WPML and Translation Services.
+The Translation Proxy system allows WPML and Translation Services to communicate efficiently. Send jobs for translation and download completed translations. There is no direct communication between WPML and Translation Services.
 
-WPML has a common interface, that allows website admins to activate and authenticate with the Translation Service, select translatable content and send it to Translation Proxy. As soon as Translation Proxy delivers the data to Translation Service, website admins are expected to login to the Translation Service client panel and complete the configuration (select translators, accept bids, etc.). When a translation is ready, Translation Service will send a notification to Translation Proxy to download the completed translation and deliver it to WPML.
+###Connecting
+
+WPML has a common interface, that allows website admins to activate and authenticate with the Translation Service, select translatable content and send it to Translation Proxy.
+
+###Receiving
+
+As soon as Translation Proxy delivers the data to the Translation Service, website admins are expected to login to the Translation Service client panel,
+and complete any additional configuration (select translators, accept bids, etc.) that may be required.
+
+### Delivering
+
+When a translation is ready, Translation Service will send a notification to Translation Proxy to download the completed translation and deliver it to WPML.
 
 # Communication workflow
 
-Here is an example of standard communication workflow between Translation Proxy and Translation Service.
+Here is an example of the communication workflow between Translation Proxy and Translation Service.
  
 <%= image_tag "images/communication_workflow.png" %>
 
-To be able to send any data to Translation Service website admins are required to have an account with the Translation Service. WPML does not allow to create an account in Translation Services.
+To be able to send any data to a Translation Service, website admins are required to have an account with the Translation Service. WPML does not allow to create an account in Translation Services.
 
-And of course, as already hinted, we also assume that as soon as Translation Proxy delivers all files for translation (from WPML to the Translation Service); website admins will complete any further configuration needed for translators to start their work in the Translation Service client panel.
+And of course, <a href="?shell#receiving">as already hinted</a>, we also assume that as soon as Translation Proxy delivers all files for translation (from WPML to the Translation Service); website admins will complete any further configuration needed for translators to start their work in the Translation Service client panel.
 
 # General API Specifications
 
@@ -45,7 +49,7 @@ Use the documentation we provide here and the [examples](https://jsonapi.org/exa
 ```ruby
 
 RestClient.get(
-  "https://api-base-url/api_version/clients", 
+  "https://example.com/api/clients", 
   {
     accept:"application/vnd.api+json", 
     authorization: "Token token=TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt"
@@ -55,8 +59,8 @@ RestClient.get(
 ```
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_url/clients"
+
+curl "https://example.com/api/clients"
   -H "Authorization: Token token='TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt'"
   -H "Accept: application/vnd.api+json"
 ```
@@ -77,10 +81,10 @@ curl "api_url/clients"
 }
 ```
 
-When a website admin activates the Translation Service in WPML, he is asked to authorize the connection with a given API Token.
-Translation Proxy requests the client account with the provided API Token from the Translation Service. 
+When a website admin activates your Translation Service in WPML, he is asked to authorize the connection with a given API Token.
+Translation Proxy requests the client account with the provided API Token from your Translation Service.
 
-If the request is successful then the Translation Service is connected to the WPML instance and the website admin is able to send content for translation. 
+If the request is successful then your Translation Service is connected to the WPML instance and the website admin is able to send content for translation.
 
 Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
 
@@ -96,178 +100,631 @@ Authorization | Token token="TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt" |
 Accept | application/vnd.api+json | 
 
 <aside class="notice">
-Translation Services must provide a <code>unique API Token</code> to each client.
+Your Translation Service must provide a <code>unique API Token</code> to each client.
 </aside>
 
-# Kittens
-
-## Get All Kittens
+# Language Pairs
 
 ```ruby
-require 'kittn'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+RestClient.get(
+  "https://example.com/api/language_pairs", 
+  {
+    accept:"application/vnd.api+json", 
+    authorization: "Token token=#{api_token}"
+  }
+)
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
 ```
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
+
+curl "https://example.com/api/language_pairs"
+  -H "Authorization: Token token='$api_token'"
+  -H "Accept: application/vnd.api+json"
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
+> The above request must return a [JSON structured response](https://jsonapi.org/) array like this:
 
 ```json
-[
+{
+  "data":[{
+    "id": "1",
+    "type": "language-pairs",
+    "attributes": {
+       "source-language": {
+          "name": "Afrikaans",
+          "iso-code": "af"
+       },
+       "target-language": {
+          "name": "Amharic",
+          "iso-code": "am"
+       }
+     }
+  }]
+}
+```
+
+To retrieve supported language pairs, Translation Proxy makes a `GET` request to a `language_pairs` API endpoint.
+Language pairs may be configured for all user accounts or per account.
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
+
+### HTTP Request
+
+`GET https://example.com/api/language_pairs`
+
+### Request Headers
+
+Key | Value | 
+--------- | ------- |
+Authorization | Token token={api_token} |
+Accept | application/vnd.api+json |
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+
+# Receiving Content
+
+## Create project
+
+```ruby
+
+RestClient.post(
+  "https://example.com/api/projects",
   {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+    data: {
+      type: 'project',
+      attributes: {
+        name: 'Example project name',
+        deadline: unix_timestamp
+      }
+    }
   },
   {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
+    accept:"application/vnd.api+json",
+    content_type: :json,
+    authorization: "Token token=#{api_token}"
   }
-]
+)
+
 ```
 
-This endpoint retrieves all kittens.
+```shell
+
+curl -X POST "https://example.com/api/projects"
+  -H "Authorization: Token token=$api_token"
+  -H "Accept: application/vnd.api+json"
+  -H "Content-Type: application/json"
+  -d @- <<REQUEST_BODY
+  {
+    "data":{
+      "type": "project",
+      "attributes": {
+        "name": "Example project name",
+        "deadline": "$unix_timestamp"
+      }
+    }
+  }
+REQUEST_BODY
+
+```
+
+> The above request must return a [JSON structured response](https://jsonapi.org/) like this:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "type": "projects",
+    "attributes": {
+      "name": "Example project name",
+      "status": "created"
+    }
+  }
+}
+```
+
+> You may return more attributes. We are mainly showing those that are of interest to Translation Proxy. (`status` and `name`)
+
+To initialize a translation project, Translation Proxy makes a `POST` request to a `projects` API endpoint
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST http://example.com/api/projects`
 
-### Query Parameters
+### Request Headers
 
-Parameter | Default | Description
+Key | Value |
+--------- | ------- |
+Authorization | Token token={api_token} |
+Accept | application/vnd.api+json |
+Content-Type | application/json |
+
+### Post Parameters
+
+Parameter | Value | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+name | string | The project name
+deadline | integer | A suggested deadline as UNIX Timestamp
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
 </aside>
 
-## Get a Specific Kitten
+
+## Add file to project
 
 ```ruby
-require 'kittn'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
+RestClient.post(
+  "https://example.com/api/jobs",
+  {
+    data: {
+      type: 'job',
+      attributes: {
+        name: 'Example job name',
+        source_language: 'iso_code',
+        target_language: 'iso_code',
+        file: 'xliff_file',
+        file_type: 'xliff',
+        callback_url: 'https://call-back-url?with_params=value&hash=value',
+      },
+      relationships: {
+        project: {
+          data: {
+            type: 'project',
+            id: "#{project_id_from_create_project_request}"
+          }
+        }
+      }
+    }
+  },
+  {
+    accept:"application/vnd.api+json",
+    content_type: :multipart_form,
+    authorization: "Token token=#{api_token}"
+  }
+)
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+
+curl -X POST "https://example.com/api/jobs"
+  -H "Authorization: Token token=$api_token"
+  -H "Accept: application/vnd.api+json"
+  -F @- <<REQUEST_BODY
+  {
+    "data": {
+      "type": "job'",
+      "attributes": {
+        "name": "Example job name",
+        "source_language": "iso_code",
+        "target_language": "iso_code",
+        "file_type": "xliff",
+        "callback_url": "https://call-back-url?with_params=value&hash=value",
+      },
+      "relationships": {
+        "project": {
+          "data": {
+            "type": "project",
+            "id": $project_id_from_create_project_request
+          }
+        }
+      }
+    }
+  }
+  -F file=@file.xliff
+REQUEST_BODY
+
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
+> The above request must return a [JSON structured response](https://jsonapi.org/) like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "data": {
+    "id": 1,
+    "type": "jobs",
+    "attributes": {
+      "status": "created"
+    }
+  }
 }
 ```
 
-This endpoint retrieves a specific kitten.
+> You may return more attributes. We are mainly showing those that is of interest to Translation Proxy. (`status`)
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+To upload a translation job, Translation Proxy makes a `POST` request to a `jobs` API endpoint.
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST http://example.com/api/jobs`
 
-### URL Parameters
+### Request Headers
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+Key | Value |
+--------- | ------- |
+Authorization | Token token={api_token} |
+Accept | application/vnd.api+json |
+Content-Type | multipart/form |
 
-## Delete a Specific Kitten
+### Post Parameters
+
+Parameter | Value | Description
+--------- | ------- | -----------
+name | string | The job name
+source_language | string | The source language iso code
+target_language | string | The target language iso code
+file | file | The xliff file
+file_type | string | The file type. Defaults to `xliff`
+callback_url | string | A url for notification callbacks
+relationships - type | string | Defaults to `project`
+relationships - id | integer | The project id
+
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+
+## Commit project
 
 ```ruby
-require 'kittn'
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
+RestClient.post(
+  "https://example.com/api/projects/#{id}",
+  {
+    data: {
+      type: 'projects',
+      id: "#{project_id}",
+      attributes: {
+        status: 'ready'
+      }
+    }
+  },
+  {
+    accept:"application/vnd.api+json",
+    content_type: :json,
+    authorization: "Token token=#{api_token}"
+  }
+)
 
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
 ```
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
+
+curl -X PATCH "https://example.com/api/projects/$id"
+  -H "Authorization: Token token=$api_token"
+  -H "Accept: application/vnd.api+json"
+  -H "Content-Type: application/json"
+  -d @- <<REQUEST_BODY
+  {
+    "data":{
+      "type": "projects",
+      "id": $project_id,
+      "attributes": {
+        "status": "ready"
+      }
+    }
+  }
+REQUEST_BODY
+
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
+> The above request must return a [JSON structured response](https://jsonapi.org/) like this:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+  "data": {
+    "id": 1,
+    "type": "projects",
+    "attributes": {
+      "status": "ready"
+    }
+  }
 }
 ```
 
-This endpoint deletes a specific kitten.
+> You may return more attributes. We are mainly showing those that interest us. (status)
+
+To commit a translation project, Translation Proxy makes a `PATCH` request to a `projects` API endpoint.
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`POST http://example.com/api/projects/:id`
 
-### URL Parameters
+### Request Headers
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+Key | Value |
+--------- | ------- |
+Authorization | Token token={api_token} |
+Accept | application/vnd.api+json |
+Content-Type | application/json |
 
+### Post Parameters
+
+Parameter | Value | Description
+--------- | ------- | -----------
+id | interger | The project id
+status | string | The project status. Defaults to `ready`
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+
+# Delivering Content
+
+## Notifications
+
+```ruby
+
+RestClient.post(
+  "https://tp.api.url/service/notifications/#{suid}?hash=#{authentication_hash}",
+  {
+    data: {
+      type: 'notification',
+      attributes: {
+        object_id: 'job_id',
+        object_type: 'job',
+        status: 'translation_ready'
+      }
+    }
+  },
+  {
+    content_type: :json
+  }
+)
+
+```
+
+```shell
+
+curl -X POST "https://tp.api.url/service/notifications/$suid?hash=$authentication_hash"
+  -H "Content-Type: application/json"
+  -d @- <<REQUEST_BODY
+  {
+    "data":{
+      "type": "notification",
+      "attributes": {
+        "object_id": "$job_id",
+        "object_type": "job",
+        "status": "translation_ready",
+      }
+    }
+  }
+REQUEST_BODY
+
+```
+
+> The `callback_url` was sent with the file upload request
+
+
+To download a translated job or cancel a translation job, Translation Proxy expects a `POST` or `GET` <a href= '?shell#add-file-to-project'>notification callback</a>.
+This is the <a href= '?shell#add-file-to-project'>callback</a> url that was sent with the `params` during the `add file to project` request
+
+### HTTP Request
+
+`POST https://tp.api.url/service/notifications/:suid?hash=:authentication_hash`
+
+### Request Headers
+
+Key | Value |
+--------- | ------- |
+Content-Type | application/json |
+
+### Post Parameters
+
+Parameter | Value | Description
+--------- | ------- | -----------
+type | string | The callback type. Expects `notification`
+object_id | integer | The resource id. The id returned in the response when the job was created.
+object_type | string | The resource type. Expects `job`
+status | string | The job status. Accepts `translation_ready` or `cancelled`
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+
+
+## Job Status
+
+```ruby
+
+RestClient.get(
+  "https://example.com/api/jobs/#{id}"
+  {
+    accept:"application/vnd.api+json",
+    authorization: "Token token=#{api_token}"
+  }
+)
+
+```
+
+```shell
+
+curl "https://example.com/api/jobs/$id"
+  -H "Authorization: Token token=$api_token"
+  -H "Accept: application/vnd.api+json"
+
+```
+
+> The above request must return a [JSON structured response](https://jsonapi.org/) like this:
+
+```json
+{
+  "data": {
+    "type": "job",
+    "attributes": {
+      "name": "Example job name",
+      "source_language": "iso_code",
+      "target_language": "iso_code",
+      "status": "translation_ready"
+    },
+    "relationships": {
+      "translation": {
+        "data": {
+          "type": "translation",
+          "id": 1
+        }
+      }
+    }
+  }
+}
+```
+
+> You may return more attributes. We are mainly showing those that are of interest to Translation Proxy. (`status`, `relationships`)
+
+Before responding to a notification callback, Translation Proxy makes a `GET` request to a `jobs/:id` API endpoint to check the status of the job.
+Only a `cancelled` or `translation_ready` status will give permission to Translation Proxy to take further action - i.e. to download a completed translation or cancel a translation job.
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
+
+### HTTP Request
+
+`POST http://example.com/api/jobs/:id`
+
+### Request Headers
+
+Key | Value |
+--------- | ------- |
+Authorization | Token token={api_token} |
+Accept | application/vnd.api+json |
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column.
+</aside>
+
+## Download Translation
+
+```ruby
+
+RestClient.get(
+  "https://example.com/api/translations/#{id}"
+  {
+    accept:"application/vnd.api+json",
+    authorization: "Token token=#{api_token}"
+  }
+)
+
+```
+
+```shell
+
+curl "https://example.com/api/translations/$id"
+  -H "Authorization: Token token=$api_token"
+  -H "Accept: application/vnd.api+json"
+
+```
+
+> The above request must return the translated content in the response body
+
+
+To download a completed translation, Translation Proxy makes a `GET` request to a `translations` API endpoint
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
+
+### HTTP Request
+
+`POST http://example.com/api/translations/:id`
+
+### Request Headers
+
+Key | Value |
+--------- | ------- |
+Authorization | Token token={api_token} |
+Accept | application/vnd.api+json |
+
+## Confirm Delivery
+
+```ruby
+
+RestClient.patch(
+  "https://example.com/api/jobs/#{id}",
+  {
+    data: {
+      type: 'jobs',
+      id: "#{job_id}",
+      attributes: {
+        status: 'delivered'
+      }
+    }
+  },
+  {
+    accept:"application/vnd.api+json",
+    content_type: :json,
+    authorization: "Token token=#{api_token}"
+  }
+)
+
+```
+
+```shell
+
+curl -X PATCH "https://example.com/api/jobs/$id"
+  -H "Authorization: Token token=$api_token"
+  -H "Accept: application/vnd.api+json"
+  -H "Content-Type: application/json"
+  -d @- <<REQUEST_BODY
+  {
+    "data":{
+      "type": "jobs",
+      "id": $job_id,
+      "attributes": {
+        "status": "delivered"
+      }
+    }
+  }
+REQUEST_BODY
+
+```
+
+> The above request must return a [JSON structured response](https://jsonapi.org/) like this:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "type": "jobs",
+    "attributes": {
+      "status": "delivered"
+    }
+  }
+}
+```
+
+> You may return more attributes. We are mainly showing what is of interest to Translation Proxy. (`status`)
+
+To confirm a translation delivery, Translation Proxy makes a `PATCH` request to a `jobs` API endpoint
+
+Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
+
+### HTTP Request
+
+`POST http://example.com/api/jobs/:id`
+
+### Request Headers
+
+Key | Value |
+--------- | ------- |
+Authorization | Token token={api_token} |
+Accept | application/vnd.api+json |
+Content-Type | application/json |
+
+### Post Parameters
+
+Parameter | Value | Description
+--------- | ------- | -----------
+id | interger | The job id
+status | string | The job status. Defaults to `delivered`
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
