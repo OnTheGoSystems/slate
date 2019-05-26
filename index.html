@@ -201,7 +201,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;,&quot;javascript&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -213,8 +213,6 @@
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
               <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="javascript">javascript</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -223,281 +221,889 @@
       <ul id="toc" class="toc-list-h1">
           <li>
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
-          </li>
-          <li>
-            <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
-          </li>
-          <li>
-            <a href="#kittens" class="toc-h1 toc-link" data-title="Kittens">Kittens</a>
               <ul class="toc-list-h2">
                   <li>
-                    <a href="#get-all-kittens" class="toc-h2 toc-link" data-title="Get All Kittens">Get All Kittens</a>
+                    <a href="#connecting" class="toc-h2 toc-link" data-title="Connecting">Connecting</a>
                   </li>
                   <li>
-                    <a href="#get-a-specific-kitten" class="toc-h2 toc-link" data-title="Get a Specific Kitten">Get a Specific Kitten</a>
+                    <a href="#receiving" class="toc-h2 toc-link" data-title="Receiving">Receiving</a>
                   </li>
                   <li>
-                    <a href="#delete-a-specific-kitten" class="toc-h2 toc-link" data-title="Delete a Specific Kitten">Delete a Specific Kitten</a>
+                    <a href="#delivering" class="toc-h2 toc-link" data-title="Delivering">Delivering</a>
                   </li>
               </ul>
           </li>
           <li>
-            <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
+            <a href="#communication-workflow" class="toc-h1 toc-link" data-title="Communication workflow">Communication workflow</a>
+          </li>
+          <li>
+            <a href="#general-api-specifications" class="toc-h1 toc-link" data-title="General API Specifications">General API Specifications</a>
+          </li>
+          <li>
+            <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#http-request" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
+                  </li>
+                  <li>
+                    <a href="#request-headers" class="toc-h2 toc-link" data-title="Request Headers">Request Headers</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#language-pairs" class="toc-h1 toc-link" data-title="Language Pairs">Language Pairs</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#http-request-2" class="toc-h2 toc-link" data-title="HTTP Request">HTTP Request</a>
+                  </li>
+                  <li>
+                    <a href="#request-headers-2" class="toc-h2 toc-link" data-title="Request Headers">Request Headers</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#receiving-content" class="toc-h1 toc-link" data-title="Receiving Content">Receiving Content</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#create-project" class="toc-h2 toc-link" data-title="Create project">Create project</a>
+                  </li>
+                  <li>
+                    <a href="#add-file-to-project" class="toc-h2 toc-link" data-title="Add file to project">Add file to project</a>
+                  </li>
+                  <li>
+                    <a href="#commit-project" class="toc-h2 toc-link" data-title="Commit project">Commit project</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#delivering-content" class="toc-h1 toc-link" data-title="Delivering Content">Delivering Content</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#notifications" class="toc-h2 toc-link" data-title="Notifications">Notifications</a>
+                  </li>
+                  <li>
+                    <a href="#job-status" class="toc-h2 toc-link" data-title="Job Status">Job Status</a>
+                  </li>
+                  <li>
+                    <a href="#download-translation" class="toc-h2 toc-link" data-title="Download Translation">Download Translation</a>
+                  </li>
+                  <li>
+                    <a href="#confirm-delivery" class="toc-h2 toc-link" data-title="Confirm Delivery">Confirm Delivery</a>
+                  </li>
+              </ul>
           </li>
       </ul>
-        <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/lord/slate'>Documentation Powered by Slate</a></li>
-        </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>Welcome to the Translation Proxy API consumer specification! You can use the information presented here to build an API that Translation Proxy is able to consume.</p>
 
-<p>We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>The Translation Proxy system allows WPML and Translation Services to communicate efficiently. Send jobs for translation and download completed translations. There is no direct communication between WPML and Translation Services.</p>
+<h3 id='connecting'>Connecting</h3>
+<p>WPML has a common interface, that allows website admins to activate and authenticate with the Translation Service, select translatable content and send it to Translation Proxy.</p>
+<h3 id='receiving'>Receiving</h3>
+<p>As soon as Translation Proxy delivers the data to the Translation Service, website admins are expected to login to the Translation Service client panel,
+and complete any additional configuration (select translators, accept bids, etc.) that may be required.</p>
+<h3 id='delivering'>Delivering</h3>
+<p>When a translation is ready, Translation Service will send a notification to Translation Proxy to download the completed translation and deliver it to WPML.</p>
+<h1 id='communication-workflow'>Communication workflow</h1>
+<p>Here is an example of the communication workflow between Translation Proxy and Translation Service.</p>
 
-<p>This example API documentation page was created with <a href="https://github.com/lord/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&#39;s documentation.</p>
+<p><img src="images/communication_workflow.png" alt="Communication workflow" /></p>
+
+<p>To be able to send any data to a Translation Service, website admins are required to have an account with the Translation Service. WPML does not allow to create an account in Translation Services.</p>
+
+<p>And of course, <a href="?shell#receiving">as already hinted</a>, we also assume that as soon as Translation Proxy delivers all files for translation (from WPML to the Translation Service); website admins will complete any further configuration needed for translators to start their work in the Translation Service client panel.</p>
+<h1 id='general-api-specifications'>General API Specifications</h1>
+<p>Translation Proxy communicates with APIs build based on the <a href="https://jsonapi.org/">{JSON:API}</a> specification.
+Use the documentation we provide here and the <a href="https://jsonapi.org/examples/">examples</a> over at {JSON:API} to structure your API.</p>
 <h1 id='authentication'>Authentication</h1>
 <blockquote>
-<p>To authorize, use this code:</p>
+<p>To authorize, Translation Proxy makes a <code>GET</code> request to a <code>clients</code> API endpoint:</p>
 </blockquote>
-<pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/clients"</span><span class="p">,</span> 
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span> 
+    <span class="ss">authorization: </span><span class="s2">"Token token=TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl <span class="s2">"https://example.com/api/clients"</span>
+  -H <span class="s2">"Authorization: Token token='TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt'"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
 </code></pre>
 <blockquote>
-<p>Make sure to replace <code>meowmeowmeow</code> with your API key.</p>
+<p>Make sure to replace <code>TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt</code> with your API key.</p>
+
+<p>The above request must return a <a href="https://jsonapi.org/">JSON structured response</a> like this:</p>
 </blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code>Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">();</span>
-</code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"users"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John Doe"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>This endpoint retrieves all kittens.</p>
+<p>When a website admin activates your Translation Service in WPML, he is asked to authorize the connection with a given API Token.
+Translation Proxy requests the client account with the provided API Token from your Translation Service.</p>
+
+<p>If the request is successful then your Translation Service is connected to the WPML instance and the website admin is able to send content for translation.</p>
+
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<p><code>GET https://example.com/api/clients</code></p>
+<h3 id='request-headers'>Request Headers</h3>
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
+<th>Key</th>
+<th>Value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>Authorization</td>
+<td>Token token=&quot;TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt&quot;</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
 </tr>
 </tbody></table>
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-<h3 id='http-request-2'>HTTP Request</h3>
-<p><code>GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
-</tr>
-</tbody></table>
-<h2 id='delete-a-specific-kitten'>Delete a Specific Kitten</h2><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -X DELETE
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre><pre class="highlight javascript tab-javascript"><code><span class="kr">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'kittn'</span><span class="p">);</span>
-
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">max</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-</code></pre>
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"deleted"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">":("</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>This endpoint deletes a specific kitten.</p>
-<h3 id='http-request-3'>HTTP Request</h3>
-<p><code>DELETE http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters-2'>URL Parameters</h3>
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ID</td>
-<td>The ID of the kitten to delete</td>
-</tr>
-</tbody></table>
-<h1 id='errors'>Errors</h1>
 <aside class="notice">
-This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
+Your Translation Service must provide a <code>unique API Token</code> to each client.
 </aside>
+<h1 id='language-pairs'>Language Pairs</h1><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/language_pairs"</span><span class="p">,</span> 
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span> 
+    <span class="ss">authorization: </span><span class="s2">"Token token=</span><span class="si">#{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
 
-<p>The Kittn API uses the following error codes:</p>
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl <span class="s2">"https://example.com/api/language_pairs"</span>
+  -H <span class="s2">"Authorization: Token token='</span><span class="nv">$api_token</span><span class="s2">'"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
+</code></pre>
+<blockquote>
+<p>The above request must return a <a href="https://jsonapi.org/">JSON structured response</a> array like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:[{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"language-pairs"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"source-language"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Afrikaans"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"iso-code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"af"</span><span class="w">
+       </span><span class="p">},</span><span class="w">
+       </span><span class="s2">"target-language"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Amharic"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"iso-code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"am"</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+  </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>To retrieve supported language pairs, Translation Proxy makes a <code>GET</code> request to a <code>language_pairs</code> API endpoint.
+Language pairs may be configured for all user accounts or per account.</p>
 
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
+<h3 id='http-request-2'>HTTP Request</h3>
+<p><code>GET https://example.com/api/language_pairs</code></p>
+<h3 id='request-headers-2'>Request Headers</h3>
 <table><thead>
 <tr>
-<th>Error Code</th>
-<th>Meaning</th>
+<th>Key</th>
+<th>Value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request -- Your request is invalid.</td>
+<td>Authorization</td>
+<td>Token token={api_token}</td>
 </tr>
 <tr>
-<td>401</td>
-<td>Unauthorized -- Your API key is wrong.</td>
-</tr>
-<tr>
-<td>403</td>
-<td>Forbidden -- The kitten requested is hidden for administrators only.</td>
-</tr>
-<tr>
-<td>404</td>
-<td>Not Found -- The specified kitten could not be found.</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed -- You tried to access a kitten with an invalid method.</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable -- You requested a format that isn&#39;t json.</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone -- The kitten requested has been removed from our servers.</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&#39;m a teapot.</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests -- You&#39;re requesting too many kittens! Slow down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error -- We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable -- We&#39;re temporarily offline for maintenance. Please try again later.</td>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
 </tr>
 </tbody></table>
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+<h1 id='receiving-content'>Receiving Content</h1><h2 id='create-project'>Create project</h2><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">post</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/projects"</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="ss">data: </span><span class="p">{</span>
+      <span class="ss">type: </span><span class="s1">'project'</span><span class="p">,</span>
+      <span class="ss">attributes: </span><span class="p">{</span>
+        <span class="ss">name: </span><span class="s1">'Example project name'</span><span class="p">,</span>
+        <span class="ss">deadline: </span><span class="n">unix_timestamp</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span>
+    <span class="ss">content_type: :json</span><span class="p">,</span>
+    <span class="ss">authorization: </span><span class="s2">"Token token=</span><span class="si">#{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="s2">"https://example.com/api/projects"</span>
+  -H <span class="s2">"Authorization: Token token=</span><span class="nv">$api_token</span><span class="s2">"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d @- <span class="sh">&lt;&lt;REQUEST_BODY
+  {
+    "data":{
+      "type": "project",
+      "attributes": {
+        "name": "Example project name",
+        "deadline": "$unix_timestamp"
+      }
+    }
+  }
+REQUEST_BODY
+
+</span></code></pre>
+<blockquote>
+<p>The above request must return a <a href="https://jsonapi.org/">JSON structured response</a> like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"projects"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example project name"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"created"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>You may return more attributes. We are mainly showing those that are of interest to Translation Proxy. (<code>status</code> and <code>name</code>)</p>
+</blockquote>
+
+<p>To initialize a translation project, Translation Proxy makes a <code>POST</code> request to a <code>projects</code> API endpoint</p>
+
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
+<h3 id='http-request-3'>HTTP Request</h3>
+<p><code>POST http://example.com/api/projects</code></p>
+<h3 id='request-headers-3'>Request Headers</h3>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Token token={api_token}</td>
+</tr>
+<tr>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody></table>
+<h3 id='post-parameters'>Post Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>The project name</td>
+</tr>
+<tr>
+<td>deadline</td>
+<td>integer</td>
+<td>A suggested deadline as UNIX Timestamp</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+<h2 id='add-file-to-project'>Add file to project</h2><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">post</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/jobs"</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="ss">data: </span><span class="p">{</span>
+      <span class="ss">type: </span><span class="s1">'job'</span><span class="p">,</span>
+      <span class="ss">attributes: </span><span class="p">{</span>
+        <span class="ss">name: </span><span class="s1">'Example job name'</span><span class="p">,</span>
+        <span class="ss">source_language: </span><span class="s1">'iso_code'</span><span class="p">,</span>
+        <span class="ss">target_language: </span><span class="s1">'iso_code'</span><span class="p">,</span>
+        <span class="ss">file: </span><span class="s1">'xliff_file'</span><span class="p">,</span>
+        <span class="ss">file_type: </span><span class="s1">'xliff'</span><span class="p">,</span>
+        <span class="ss">callback_url: </span><span class="s1">'https://call-back-url?with_params=value&amp;hash=value'</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="ss">relationships: </span><span class="p">{</span>
+        <span class="ss">project: </span><span class="p">{</span>
+          <span class="ss">data: </span><span class="p">{</span>
+            <span class="ss">type: </span><span class="s1">'project'</span><span class="p">,</span>
+            <span class="ss">id: </span><span class="s2">"</span><span class="si">#{</span><span class="n">project_id_from_create_project_request</span><span class="si">}</span><span class="s2">"</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span>
+    <span class="ss">content_type: :multipart_form</span><span class="p">,</span>
+    <span class="ss">authorization: </span><span class="s2">"Token token=</span><span class="si">#{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="s2">"https://example.com/api/jobs"</span>
+  -H <span class="s2">"Authorization: Token token=</span><span class="nv">$api_token</span><span class="s2">"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
+  -F @- <span class="sh">&lt;&lt;REQUEST_BODY
+  {
+    "data": {
+      "type": "job'",
+      "attributes": {
+        "name": "Example job name",
+        "source_language": "iso_code",
+        "target_language": "iso_code",
+        "file_type": "xliff",
+        "callback_url": "https://call-back-url?with_params=value&amp;hash=value",
+      },
+      "relationships": {
+        "project": {
+          "data": {
+            "type": "project",
+            "id": $project_id_from_create_project_request
+          }
+        }
+      }
+    }
+  }
+  -F file=@file.xliff
+REQUEST_BODY
+
+</span></code></pre>
+<blockquote>
+<p>The above request must return a <a href="https://jsonapi.org/">JSON structured response</a> like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jobs"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"created"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>You may return more attributes. We are mainly showing those that is of interest to Translation Proxy. (<code>status</code>)</p>
+</blockquote>
+
+<p>To upload a translation job, Translation Proxy makes a <code>POST</code> request to a <code>jobs</code> API endpoint.</p>
+
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
+<h3 id='http-request-4'>HTTP Request</h3>
+<p><code>POST http://example.com/api/jobs</code></p>
+<h3 id='request-headers-4'>Request Headers</h3>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Token token={api_token}</td>
+</tr>
+<tr>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td>multipart/form</td>
+</tr>
+</tbody></table>
+<h3 id='post-parameters-2'>Post Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>The job name</td>
+</tr>
+<tr>
+<td>source_language</td>
+<td>string</td>
+<td>The source language iso code</td>
+</tr>
+<tr>
+<td>target_language</td>
+<td>string</td>
+<td>The target language iso code</td>
+</tr>
+<tr>
+<td>file</td>
+<td>file</td>
+<td>The xliff file</td>
+</tr>
+<tr>
+<td>file_type</td>
+<td>string</td>
+<td>The file type. Defaults to <code>xliff</code></td>
+</tr>
+<tr>
+<td>callback_url</td>
+<td>string</td>
+<td>A url for notification callbacks</td>
+</tr>
+<tr>
+<td>relationships - type</td>
+<td>string</td>
+<td>Defaults to <code>project</code></td>
+</tr>
+<tr>
+<td>relationships - id</td>
+<td>integer</td>
+<td>The project id</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+<h2 id='commit-project'>Commit project</h2><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">post</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/projects/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="ss">data: </span><span class="p">{</span>
+      <span class="ss">type: </span><span class="s1">'projects'</span><span class="p">,</span>
+      <span class="ss">id: </span><span class="s2">"</span><span class="si">#{</span><span class="n">project_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+      <span class="ss">attributes: </span><span class="p">{</span>
+        <span class="ss">status: </span><span class="s1">'ready'</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span>
+    <span class="ss">content_type: :json</span><span class="p">,</span>
+    <span class="ss">authorization: </span><span class="s2">"Token token=</span><span class="si">#{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl -X PATCH <span class="s2">"https://example.com/api/projects/</span><span class="nv">$id</span><span class="s2">"</span>
+  -H <span class="s2">"Authorization: Token token=</span><span class="nv">$api_token</span><span class="s2">"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d @- <span class="sh">&lt;&lt;REQUEST_BODY
+  {
+    "data":{
+      "type": "projects",
+      "id": $project_id,
+      "attributes": {
+        "status": "ready"
+      }
+    }
+  }
+REQUEST_BODY
+
+</span></code></pre>
+<blockquote>
+<p>The above request must return a <a href="https://jsonapi.org/">JSON structured response</a> like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"projects"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ready"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>You may return more attributes. We are mainly showing those that interest us. (status)</p>
+</blockquote>
+
+<p>To commit a translation project, Translation Proxy makes a <code>PATCH</code> request to a <code>projects</code> API endpoint.</p>
+
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
+<h3 id='http-request-5'>HTTP Request</h3>
+<p><code>POST http://example.com/api/projects/:id</code></p>
+<h3 id='request-headers-5'>Request Headers</h3>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Token token={api_token}</td>
+</tr>
+<tr>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody></table>
+<h3 id='post-parameters-3'>Post Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>interger</td>
+<td>The project id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>The project status. Defaults to <code>ready</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+<h1 id='delivering-content'>Delivering Content</h1><h2 id='notifications'>Notifications</h2><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">post</span><span class="p">(</span>
+  <span class="s2">"https://tp.api.url/service/notifications/</span><span class="si">#{</span><span class="n">suid</span><span class="si">}</span><span class="s2">?hash=</span><span class="si">#{</span><span class="n">authentication_hash</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="ss">data: </span><span class="p">{</span>
+      <span class="ss">type: </span><span class="s1">'notification'</span><span class="p">,</span>
+      <span class="ss">attributes: </span><span class="p">{</span>
+        <span class="ss">object_id: </span><span class="s1">'job_id'</span><span class="p">,</span>
+        <span class="ss">object_type: </span><span class="s1">'job'</span><span class="p">,</span>
+        <span class="ss">status: </span><span class="s1">'translation_ready'</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="ss">content_type: :json</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="s2">"https://tp.api.url/service/notifications/</span><span class="nv">$suid</span><span class="s2">?hash=</span><span class="nv">$authentication_hash</span><span class="s2">"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d @- <span class="sh">&lt;&lt;REQUEST_BODY
+  {
+    "data":{
+      "type": "notification",
+      "attributes": {
+        "object_id": "$job_id",
+        "object_type": "job",
+        "status": "translation_ready",
+      }
+    }
+  }
+REQUEST_BODY
+
+</span></code></pre>
+<blockquote>
+<p>The <code>callback_url</code> was sent with the file upload request</p>
+</blockquote>
+
+<p>To download a translated job or cancel a translation job, Translation Proxy expects a <code>POST</code> or <code>GET</code> <a href= '?shell#add-file-to-project'>notification callback</a>.
+This is the <a href= '?shell#add-file-to-project'>callback</a> url that was sent with the <code>params</code> during the <code>add file to project</code> request</p>
+<h3 id='http-request-6'>HTTP Request</h3>
+<p><code>POST https://tp.api.url/service/notifications/:suid?hash=:authentication_hash</code></p>
+<h3 id='request-headers-6'>Request Headers</h3>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody></table>
+<h3 id='post-parameters-4'>Post Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>The callback type. Expects <code>notification</code></td>
+</tr>
+<tr>
+<td>object_id</td>
+<td>integer</td>
+<td>The resource id. The id returned in the response when the job was created.</td>
+</tr>
+<tr>
+<td>object_type</td>
+<td>string</td>
+<td>The resource type. Expects <code>job</code></td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>The job status. Accepts <code>translation_ready</code> or <code>cancelled</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
+<h2 id='job-status'>Job Status</h2><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/jobs/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span>
+    <span class="ss">authorization: </span><span class="s2">"Token token=</span><span class="si">#{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl <span class="s2">"https://example.com/api/jobs/</span><span class="nv">$id</span><span class="s2">"</span>
+  -H <span class="s2">"Authorization: Token token=</span><span class="nv">$api_token</span><span class="s2">"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
+
+</code></pre>
+<blockquote>
+<p>The above request must return a <a href="https://jsonapi.org/">JSON structured response</a> like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"job"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Example job name"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"source_language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iso_code"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"target_language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iso_code"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"translation_ready"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"relationships"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"translation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"translation"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>You may return more attributes. We are mainly showing those that are of interest to Translation Proxy. (<code>status</code>, <code>relationships</code>)</p>
+</blockquote>
+
+<p>Before responding to a notification callback, Translation Proxy makes a <code>GET</code> request to a <code>jobs/:id</code> API endpoint to check the status of the job.
+Only a <code>cancelled</code> or <code>translation_ready</code> status will give permission to Translation Proxy to take further action - i.e. to download a completed translation or cancel a translation job.</p>
+
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
+<h3 id='http-request-7'>HTTP Request</h3>
+<p><code>POST http://example.com/api/jobs/:id</code></p>
+<h3 id='request-headers-7'>Request Headers</h3>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Token token={api_token}</td>
+</tr>
+<tr>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column.
+</aside>
+<h2 id='download-translation'>Download Translation</h2><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/translations/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span>
+    <span class="ss">authorization: </span><span class="s2">"Token token=</span><span class="si">#{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl <span class="s2">"https://example.com/api/translations/</span><span class="nv">$id</span><span class="s2">"</span>
+  -H <span class="s2">"Authorization: Token token=</span><span class="nv">$api_token</span><span class="s2">"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
+
+</code></pre>
+<blockquote>
+<p>The above request must return the translated content in the response body</p>
+</blockquote>
+
+<p>To download a completed translation, Translation Proxy makes a <code>GET</code> request to a <code>translations</code> API endpoint</p>
+
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
+<h3 id='http-request-8'>HTTP Request</h3>
+<p><code>POST http://example.com/api/translations/:id</code></p>
+<h3 id='request-headers-8'>Request Headers</h3>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Token token={api_token}</td>
+</tr>
+<tr>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
+</tr>
+</tbody></table>
+<h2 id='confirm-delivery'>Confirm Delivery</h2><pre class="highlight ruby tab-ruby"><code>
+<span class="no">RestClient</span><span class="p">.</span><span class="nf">patch</span><span class="p">(</span>
+  <span class="s2">"https://example.com/api/jobs/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+  <span class="p">{</span>
+    <span class="ss">data: </span><span class="p">{</span>
+      <span class="ss">type: </span><span class="s1">'jobs'</span><span class="p">,</span>
+      <span class="ss">id: </span><span class="s2">"</span><span class="si">#{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+      <span class="ss">attributes: </span><span class="p">{</span>
+        <span class="ss">status: </span><span class="s1">'delivered'</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="n">accept</span><span class="ss">:"application/vnd.api+json"</span><span class="p">,</span>
+    <span class="ss">content_type: :json</span><span class="p">,</span>
+    <span class="ss">authorization: </span><span class="s2">"Token token=</span><span class="si">#{</span><span class="n">api_token</span><span class="si">}</span><span class="s2">"</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre><pre class="highlight shell tab-shell"><code>
+curl -X PATCH <span class="s2">"https://example.com/api/jobs/</span><span class="nv">$id</span><span class="s2">"</span>
+  -H <span class="s2">"Authorization: Token token=</span><span class="nv">$api_token</span><span class="s2">"</span>
+  -H <span class="s2">"Accept: application/vnd.api+json"</span>
+  -H <span class="s2">"Content-Type: application/json"</span>
+  -d @- <span class="sh">&lt;&lt;REQUEST_BODY
+  {
+    "data":{
+      "type": "jobs",
+      "id": $job_id,
+      "attributes": {
+        "status": "delivered"
+      }
+    }
+  }
+REQUEST_BODY
+
+</span></code></pre>
+<blockquote>
+<p>The above request must return a <a href="https://jsonapi.org/">JSON structured response</a> like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jobs"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"delivered"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>You may return more attributes. We are mainly showing what is of interest to Translation Proxy. (<code>status</code>)</p>
+</blockquote>
+
+<p>To confirm a translation delivery, Translation Proxy makes a <code>PATCH</code> request to a <code>jobs</code> API endpoint</p>
+
+<p>Raise an <a href="https://jsonapi.org/examples/#error-objects">error object</a> when the request is unsuccessful</p>
+<h3 id='http-request-9'>HTTP Request</h3>
+<p><code>POST http://example.com/api/jobs/:id</code></p>
+<h3 id='request-headers-9'>Request Headers</h3>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Authorization</td>
+<td>Token token={api_token}</td>
+</tr>
+<tr>
+<td>Accept</td>
+<td>application/vnd.api+json</td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody></table>
+<h3 id='post-parameters-5'>Post Parameters</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>interger</td>
+<td>The job id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>The job status. Defaults to <code>delivered</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Please note the <code>json</code> structure of the expected response in the code examples column
+</aside>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="shell">shell</a>
                 <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="javascript">javascript</a>
           </div>
       </div>
     </div>
