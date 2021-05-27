@@ -30,7 +30,7 @@ When a translation is ready, Translation Service will send a notification to Tra
 # Communication workflow
 
 Here is an example of the communication workflow between Translation Proxy and Translation Service.
- 
+
 <%= image_tag "images/communication_workflow.png" %>
 
 To be able to send any data to a Translation Service, website admins are required to have an account with the Translation Service. WPML does not allow to create an account in Translation Services.
@@ -39,8 +39,24 @@ And of course, <a href="?shell#receiving">as already hinted</a>, we also assume 
 
 # General API Specifications
 
-Translation Proxy communicates with APIs build based on the [{JSON:API}](https://jsonapi.org/) specification.
-Use the documentation we provide here and the [examples](https://jsonapi.org/examples/) over at {JSON:API} to structure your API.
+Translation Proxy communicates with APIs build based on the [JSON:API](https://jsonapi.org/) specification.
+Use the documentation we provide here and the [examples](https://jsonapi.org/examples/) over at JSON:API to structure your API.
+
+### API endpoint format
+
+Please note the format of the API endpoints. The URI can be divided into 3 distinct parts:
+
+`{api-base-url}/{api-version}/{api-endpoint}`
+
+For example for the "Authentication request" the parts are:
+
+`https://api.example.com/v1/clients`
+
+Key | Value |
+--------- | ------- |
+api-base-url | https://api.example.com|
+api-version | v1 - usually a version number (e.g. 1.0) in real world applications |
+api-endpoint | clients |
 
 # Authentication
 
@@ -49,9 +65,9 @@ Use the documentation we provide here and the [examples](https://jsonapi.org/exa
 ```ruby
 
 RestClient.get(
-  "https://example.com/api/clients", 
+  "https://example.com/api/clients",
   {
-    accept:"application/vnd.api+json", 
+    accept:"application/vnd.api+json",
     authorization: "Token token=TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt"
   }
 )
@@ -94,10 +110,10 @@ Raise an [error object](https://jsonapi.org/examples/#error-objects) when the re
 
 ### Request Headers
 
-Key | Value | 
+Key | Value |
 --------- | ------- |
 Authorization | Token token="TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt" |
-Accept | application/vnd.api+json | 
+Accept | application/vnd.api+json |
 
 <aside class="notice">
 Your Translation Service must provide a <code>unique API Token</code> to each client.
@@ -108,9 +124,9 @@ Your Translation Service must provide a <code>unique API Token</code> to each cl
 ```ruby
 
 RestClient.get(
-  "https://example.com/api/language_pairs", 
+  "https://example.com/api/language_pairs",
   {
-    accept:"application/vnd.api+json", 
+    accept:"application/vnd.api+json",
     authorization: "Token token=#{api_token}"
   }
 )
@@ -133,12 +149,26 @@ curl "https://example.com/api/language_pairs"
     "type": "language-pairs",
     "attributes": {
        "source-language": {
-          "name": "Afrikaans",
-          "iso-code": "af"
+          "name": "English",
+          "iso-code": "en"
        },
        "target-language": {
-          "name": "Amharic",
-          "iso-code": "am"
+          "name": "German",
+          "iso-code": "de"
+       }
+     }
+  },
+  {
+    "id": "2",
+    "type": "language-pairs",
+    "attributes": {
+       "source-language": {
+          "name": "German",
+          "iso-code": "de"
+       },
+       "target-language": {
+          "name": "English",
+          "iso-code": "en"
        }
      }
   }]
@@ -148,6 +178,15 @@ curl "https://example.com/api/language_pairs"
 To retrieve supported language pairs, Translation Proxy makes a `GET` request to a `language_pairs` API endpoint.
 Language pairs may be configured for all user accounts or per account.
 
+### Language Pair Arrangement
+Should the language pairs be set globally (for all user accounts) the request will likely be redirected to a general language pair endpoint.
+
+In the case where the language pairs are set per user account the API Token in the Authorization header will likely be used to redirect the request to the right language pair endpoint for the individual account.
+
+### Language Pair Direction
+
+Each source and each target needs to be explicitly specified in the response. For example given a language e.g. "German" can used both as source and target language, the response will return information with "German" both in the source and target fields as shown in the example response to the right.
+
 Raise an [error object](https://jsonapi.org/examples/#error-objects) when the request is unsuccessful
 
 ### HTTP Request
@@ -156,7 +195,7 @@ Raise an [error object](https://jsonapi.org/examples/#error-objects) when the re
 
 ### Request Headers
 
-Key | Value | 
+Key | Value |
 --------- | ------- |
 Authorization | Token token={api_token} |
 Accept | application/vnd.api+json |
@@ -264,7 +303,7 @@ RestClient.post(
   "https://example.com/api/jobs",
   {
     data: {
-      type: 'job',
+      type: 'jobs',
       attributes: {
         name: 'Example job name',
         source_language: 'iso_code',
@@ -298,9 +337,8 @@ curl -X POST "https://example.com/api/jobs"
   -H "Authorization: Token token=$api_token"
   -H "Accept: application/vnd.api+json"
   -F @- <<REQUEST_BODY
-  {
     "data": {
-      "type": "job'",
+      "type": "jobs'",
       "attributes": {
         "name": "Example job name",
         "source_language": "iso_code",
@@ -317,8 +355,7 @@ curl -X POST "https://example.com/api/jobs"
         }
       }
     }
-  }
-  -F file=@file.xliff
+    -F data['attributes']['file']=@file.xliff
 REQUEST_BODY
 
 ```
@@ -353,7 +390,7 @@ Key | Value |
 --------- | ------- |
 Authorization | Token token={api_token} |
 Accept | application/vnd.api+json |
-Content-Type | multipart/form |
+Content-Type | multipart/form-data |
 
 ### Post Parameters
 
@@ -633,7 +670,7 @@ Raise an [error object](https://jsonapi.org/examples/#error-objects) when the re
 
 ### HTTP Request
 
-`POST http://example.com/api/translations/:id`
+`GET http://example.com/api/translations/:id`
 
 ### Request Headers
 
