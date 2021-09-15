@@ -414,7 +414,7 @@ Please note the <code>json</code> structure of the expected response in the code
 
 ```ruby
 
-RestClient.post(
+RestClient.patch(
   "https://example.com/api/projects/#{id}",
   {
     data: {
@@ -476,7 +476,7 @@ Raise an [error object](https://jsonapi.org/examples/#error-objects) when the re
 
 ### HTTP Request
 
-`POST http://example.com/api/projects/:id`
+`PATCH http://example.com/api/projects/:id`
 
 ### Request Headers
 
@@ -626,7 +626,7 @@ Raise an [error object](https://jsonapi.org/examples/#error-objects) when the re
 
 ### HTTP Request
 
-`POST http://example.com/api/jobs/:id`
+`GET http://example.com/api/jobs/:id`
 
 ### Request Headers
 
@@ -745,7 +745,7 @@ Raise an [error object](https://jsonapi.org/examples/#error-objects) when the re
 
 ### HTTP Request
 
-`POST http://example.com/api/jobs/:id`
+`PATCH http://example.com/api/jobs/:id`
 
 ### Request Headers
 
