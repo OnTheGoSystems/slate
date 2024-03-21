@@ -116,7 +116,7 @@ Authorization | Token token="TPynCDt1oAvmyQnZT4Ep4TrI6VfGXgHWLcKa5fmNVaIt" |
 Accept | application/vnd.api+json |
 
 <aside class="notice">
-Your Translation Service must provide a <code>unique API Token</code> to each client.
+    Your Translation Service must provide a <code>unique API Token</code> to each client, and TP will do a <code>base64 encode</code> for the API Token before using it in the requests authorization header.
 </aside>
 
 # Language Pairs
